@@ -25,12 +25,21 @@ const HOST = configs.core.host;
 const io = new Server(server);
 
 io.sockets.on('connection', (socket: Socket) => {
-  console.log('A user connected');
+  console.log(`user-${socket.id} connected`);
+
+  // chat message received
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
+
+    // received chat message and emit message to all connected users
+    io.emit('chat message', msg);
+
+    console.log('=> chat message emitted');
   });
+
+  // user disconnected
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(`user-${socket.id} disconnected`);
   });
 });
 
